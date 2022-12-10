@@ -5,12 +5,12 @@ Items::Items() : Items(Item())
 
 }
 
-Items::Items(const Item &item, const uint count) : item(item), count(count)
+Items::Items(const Item &item, const int count) : item(item), count(count)
 {
 
 }
 
-Items::Items(const Item &&item, const uint count) : item(std::move(item)), count(count)
+Items::Items(const Item &&item, const int count) : item(std::move(item)), count(count)
 {
 
 }
@@ -21,7 +21,7 @@ Inventory::Inventory(const uint rowCount, const uint columnCount, QObject *paren
     _items = QVector<QVector<Items>>(_rowCount, QVector<Items>(_columnCount, Items()));
 }
 
-bool Inventory::setItem(const uint row, const uint column, const Item item, const uint count)
+bool Inventory::setItem(const uint row, const uint column, const Item item, const int count)
 {
     if (!isValidIndex(row, column))
         return false;
@@ -49,7 +49,7 @@ bool Inventory::isAddItem(const uint row, const uint column, const Item item) co
     return _items[row][column].item == item;
 }
 
-bool Inventory::addItem(const uint row, const uint column, const Item item, const uint count)
+bool Inventory::addItem(const uint row, const uint column, const Item item, const int count)
 {
     if (!isAddItem(row, column, item))
         return false;

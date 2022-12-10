@@ -12,14 +12,14 @@ struct Items {
     /// Конструктор
     /// \param item Предмет
     /// \param count Количество
-    explicit Items(const Item &item, const uint count = 0);
+    explicit Items(const Item &item, const int count = 0);
     /// Конструктор
     /// \param item Предмет
     /// \param count Количество
-    explicit Items(const Item &&item, const uint count = 0);
+    explicit Items(const Item &&item, const int count = 0);
 
     Item item; ///< Предмет
-    uint count; ///< Количество
+    int count; ///< Количество
 };
 Q_DECLARE_METATYPE(Items)
 
@@ -40,12 +40,11 @@ public:
     /// \param item Предмет
     /// \param count Количество предметов
     /// \return Успех операции
-    Q_SLOT bool setItem(const uint row, const uint column, const Item item, const uint count = 1);
-    /// Установить предмет
+    Q_SLOT bool setItem(const uint row, const uint column, const Item item, const int count = 1);
+    /// Установить предметы
     /// \param row Строка
     /// \param column Столбец
-    /// \param item Предмет
-    /// \param count Количество предметов
+    /// \param items Предметы
     /// \return Успех операции
     Q_SLOT bool setItems(const uint row, const uint column, const Items items);
     /// Можно ли добавить предмет
@@ -60,7 +59,7 @@ public:
     /// \param item Предмет
     /// \param count Количество
     /// \return Успех операции
-    Q_SLOT bool addItem(const uint row, const uint column, const Item item, const uint count = 0);
+    Q_SLOT bool addItem(const uint row, const uint column, const Item item, const int count = 0);
     /// Получить предмет и его количество
     /// \param row Строка
     /// \param column Стобец
@@ -87,7 +86,7 @@ public:
     /// \param item Предмет
     /// \param count Количество предметов
     Q_SIGNAL void itemsChanged(const uint row, const uint column,
-                               const Item item, const uint count) const;
+                               const Item item, const int count) const;
 
     /// Получить количество строк
     /// \return Количество строк

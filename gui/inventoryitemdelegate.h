@@ -15,8 +15,8 @@ public:
     /// \param painter Объект отрисовки
     /// \param option Параметры силя
     /// \param index Индекс
-    void paint(QPainter *painter,
-               const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const override;
 protected:
     /// Событие редактирования
     /// \return Успех обработки события
