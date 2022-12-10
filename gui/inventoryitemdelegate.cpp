@@ -2,18 +2,12 @@
 
 #include <QApplication>
 #include <QPainter>
-#include <QDebug>
 
 InventoryItemDelegate::InventoryItemDelegate(QObject *parent)
     : QStyledItemDelegate(parent)
 {
 
 }
-
-//QWidget *ItemDelegate::createEditor(QWidget *, const QStyleOptionViewItem &, const QModelIndex &) const
-//{
-//    return nullptr;
-//}l
 
 void InventoryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                        const QModelIndex &index) const

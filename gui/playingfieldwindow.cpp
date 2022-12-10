@@ -29,7 +29,6 @@ PlayingFieldWindow::PlayingFieldWindow(QWidget *parent)
         centralWidget()->setEnabled(false);
     });
 
-
     const auto mainWidget = new QWidget;
 
     const auto lay = new QVBoxLayout(mainWidget);

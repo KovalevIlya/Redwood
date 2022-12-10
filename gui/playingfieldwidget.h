@@ -25,7 +25,6 @@ private:
     QWidget *makeSpawner();
 
     InventoryModel* _inventoryModel; ///< Модель инвентаря
-
 };
 
 #endif // PLAYINGFIELDWIDGET_H

@@ -11,19 +11,12 @@
 #include <QTableWidget>
 #include <QListWidget>
 #include <QHeaderView>
-
 #include <QItemDelegate>
 
 constexpr int sizeItem = 100;
 constexpr int rowCount = 3;
 constexpr int columnCount = 3;
-constexpr int itemsCount = 1;
-
-constexpr int borderTopWidth = 10;
-constexpr int borderRightWidth = 13;
-constexpr int borderBottomWidth = 10;
-constexpr int borderLeftWidth = 14;
-
+constexpr int itemsCount = 2;
 
 PlayingFieldWidget::PlayingFieldWidget(QWidget *parent)
     : QWidget(parent)
@@ -45,14 +38,13 @@ QWidget *PlayingFieldWidget::makeInventory()
     _inventoryModel = new InventoryModel(new Inventory(rowCount, columnCount), this);
     inventory->setModel(_inventoryModel);
 
-
     return inventory;
 }
 
 QWidget *PlayingFieldWidget::makeSpawner()
 {
     const auto items = new QListView();
-    const auto model = new SpawnerModel(2);
+    const auto model = new SpawnerModel(itemsCount);
     items->setModel(model);
     items->setViewMode(QListView::IconMode);
     items->setIconSize(QSize(sizeItem, sizeItem));
