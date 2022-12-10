@@ -10,10 +10,10 @@ inline uint qHash(const Item::TypeItem &tag) {
 const QHash<Item::TypeItem, QString> Item::_typeNames = {
     { Item::TypeItem::None, QT_TRANSLATE_NOOP(Item::TypeItem, "Пустота") },
     { Item::TypeItem::Apple, QT_TRANSLATE_NOOP(Item::TypeItem, "Яблоко") },
+    { Item::TypeItem::Cheese, QT_TRANSLATE_NOOP(Item::TypeItem, "Сыр") },
 };
 
-Item::Item()
-    : Item(TypeItem::None, "")
+Item::Item() : Item(TypeItem::None, "")
 {
 
 }
@@ -31,15 +31,15 @@ Item::Item(const TypeItem &&typeItem, const QString &&iconPath)
 }
 
 Item::Item(const Item &other)
+    : _typeItem(other._typeItem), _iconPath(other._iconPath)
 {
-    _typeItem = other._typeItem;
-    _iconPath = other._iconPath;
+
 }
 
 Item::Item(Item &&other)
+    : _typeItem(std::move(other._typeItem)), _iconPath(std::move(other._iconPath))
 {
-    _typeItem = std::move(other._typeItem);
-    _iconPath = std::move(other._iconPath);
+
 }
 
 void Item::setType(const TypeItem typeItem)

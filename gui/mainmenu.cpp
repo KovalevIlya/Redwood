@@ -1,5 +1,6 @@
 #include "mainmenu.h"
-#include "menu.h"
+#include "menuwidget.h"
+#include "playingfieldwindow.h"
 
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -10,11 +11,17 @@ MainMenu::MainMenu() : QMainWindow()
     setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint);
     setFixedSize(200, 100);
 
-    const auto menu = new Menu(tr("Новая игра"));
+    const auto menu = new MenuWidget(tr("Новая игра"));
 
-    connect(menu, &Menu::start, this, [](){});
+    connect(menu, &MenuWidget::start, this, [this](){
+        const auto playingField = new PlayingFieldWindow();
+        connect(playingField, &PlayingFieldWindow::destroyed, this, &MainMenu::deleteLater);
 
-    connect(menu, &Menu::exit, this, &MainMenu::close);
+        playingField->show();
+        close();
+    });
+
+    connect(menu, &MenuWidget::exit, this, &MainMenu::close);
 
     setCentralWidget(menu);
 }

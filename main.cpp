@@ -1,4 +1,6 @@
 #include "gui/mainmenu.h"
+#include "item.h"
+#include "inventory.h"
 
 #include <QApplication>
 

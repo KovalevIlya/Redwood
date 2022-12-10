@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-/// Предмета
+/// Предмет
 class Item
 {
     Q_GADGET
@@ -11,7 +11,8 @@ public:
     /// Типы предметов
     enum class TypeItem {
         None = -1, ///< Пустота
-        Apple = 0 ///< Яблоко
+        Apple = 0, ///< Яблоко
+        Cheese ///< Сыр
     };
     Q_ENUM(TypeItem);
 
@@ -91,5 +92,6 @@ private:
         return !(lhs == rhs);
     }
 };
+Q_DECLARE_METATYPE(Item)
 
 #endif // ITEM_H

@@ -5,6 +5,24 @@
 
 #include <QObject>
 
+/// Структура предметов
+struct Items {
+    /// Конструктор по-умолчанию
+    Items();
+    /// Конструктор
+    /// \param item Предмет
+    /// \param count Количество
+    explicit Items(const Item &item, const uint count = 0);
+    /// Конструктор
+    /// \param item Предмет
+    /// \param count Количество
+    explicit Items(const Item &&item, const uint count = 0);
+
+    Item item; ///< Предмет
+    uint count; ///< Количество
+};
+Q_DECLARE_METATYPE(Items)
+
 /// Инвентарь
 class Inventory : public QObject
 {
@@ -22,41 +40,54 @@ public:
     /// \param item Предмет
     /// \param count Количество предметов
     /// \return Успех операции
-    Q_SLOT bool setItem(uint row, uint column, Item item, uint count = 0);
+    Q_SLOT bool setItem(const uint row, const uint column, const Item item, const uint count = 1);
+    /// Установить предмет
+    /// \param row Строка
+    /// \param column Столбец
+    /// \param item Предмет
+    /// \param count Количество предметов
+    /// \return Успех операции
+    Q_SLOT bool setItems(const uint row, const uint column, const Items items);
     /// Можно ли добавить предмет
     /// \param row Строка
     /// \param column Столбец
     /// \param item Предмет
     /// \return Можно ли добавить предмет
-    bool isAddItem(uint row, uint column, Item item) const;
+    bool isAddItem(const uint row, const uint column, const Item item) const;
     /// Добавить предмет
     /// \param row Строка
     /// \param column Столбец
     /// \param item Предмет
     /// \param count Количество
     /// \return Успех операции
-    Q_SLOT bool addItem(uint row, uint column, Item item, uint count = 0);
+    Q_SLOT bool addItem(const uint row, const uint column, const Item item, const uint count = 0);
     /// Получить предмет и его количество
     /// \param row Строка
     /// \param column Стобец
     /// \return Предмет и его количество
-    QPair<Item, uint> itemThisCount(uint row, uint column) const;
+    Items items(const uint row, const uint column) const;
     /// Получить предмет
     /// \param row Строка
     /// \param column Столбец
     /// \return Предмет
-    Item item(uint row, uint column) const;
+    Item item(const uint row, const uint column) const;
     /// Получить количество предметов
     /// \param row Строка
     /// \param column Столбец
     /// \return Количество предметов
-    uint countItem(uint row, uint column) const;
+    uint countItems(const uint row, const uint column) const;
+    /// Пустой ли предмет
+    /// \param row Строка
+    /// \param column Столбец
+    /// \return Пустой ли предмет
+    bool isEmpty(const uint row, const uint column) const;
     /// Сигнал об изменении предмета
     /// \param row Строка
     /// \param column Столбец
     /// \param item Предмет
     /// \param count Количество предметов
-    Q_SIGNAL void itemChanged(uint row, uint column, Item item, uint count) const;
+    Q_SIGNAL void itemsChanged(const uint row, const uint column,
+                               const Item item, const uint count) const;
 
     /// Получить количество строк
     /// \return Количество строк
@@ -64,18 +95,20 @@ public:
     /// Получить количество столбцов
     /// \return Количество столбцов
     int columnCount() const;
+    /// Сброс инвентаря
+    void reset();
 
 private:
     /// Коректен ли индекс предмета
     /// \param row Строка
     /// \param column Столбец
     /// \return Коректен ли индекс предмета
-    bool isValidIndex(uint row, uint column) const;
+    bool isValidIndex(const uint row, const uint column) const;
 
     const uint _rowCount; ///< Количество строк
     const uint _columnCount; ///< Количество столбцов
 
-    QVector<QVector<QPair<Item, uint>>> _items; ///< Таблица предметов
+    QVector<QVector<Items>> _items; ///< Таблица предметов
 };
 
 #endif // INVENTORY_H
