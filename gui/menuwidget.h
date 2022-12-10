@@ -1,10 +1,10 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef MENUWIDGET_H
+#define MENUWIDGET_H
 
 #include <QWidget>
 
 /// Виджет меню
-class Menu : public QWidget
+class MenuWidget : public QWidget
 {
     Q_OBJECT
 public:
@@ -12,8 +12,8 @@ public:
     /// \param startText Текст для кнопки начала игры
     /// \param orientations Ориентация меню
     /// \param parent Родительский класс
-    explicit Menu(const QString &startText, const Qt::Orientation orientations = Qt::Vertical,
-                  QWidget *parent = nullptr);
+    explicit MenuWidget(const QString &startText, const Qt::Orientation orientations = Qt::Vertical,
+                        QWidget *parent = nullptr);
 
     /// Сигнал начала игры
     Q_SIGNAL void start();
@@ -21,4 +21,4 @@ public:
     Q_SIGNAL void exit();
 };
 
-#endif // MENU_H
+#endif // MENUWIDGET_H

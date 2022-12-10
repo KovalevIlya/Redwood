@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,15 +16,38 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    gui/menu.cpp \
+    gui/inventoriview.cpp \
+    gui/inventoryitemdelegate.cpp \
+    gui/menuwidget.cpp \
+    gui/playingfieldwidget.cpp \
+    gui/playingfieldwindow.cpp \
+    inventory.cpp \
+    inventorymodel.cpp \
+    item.cpp \
     main.cpp \
-    gui/mainmenu.cpp
+    gui/mainmenu.cpp \
+    spawnermodel.cpp
 
 HEADERS += \
+    gui/inventoriview.h \
+    gui/inventoryitemdelegate.h \
     gui/mainmenu.h \
-    gui/menu.h
+    gui/menuwidget.h \
+    gui/playingfieldwidget.h \
+    gui/playingfieldwindow.h \
+    inventory.h \
+    inventorymodel.h \
+    item.h \
+    roles.h \
+    spawnermodel.h
+
+OTHER_FILES += \
+    README.md
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resourses.qrc
