@@ -1,75 +1,45 @@
 #include "item.h"
 
 #include <QIcon>
-#include <QHash>
 
-inline uint qHash(const Item::TypeItem &tag) {
-    return qHash(static_cast<int>(tag));
-}
-
-const QHash<Item::TypeItem, QString> Item::_typeNames = {
-    { Item::TypeItem::None, QT_TRANSLATE_NOOP(Item::TypeItem, "Пустота") },
-    { Item::TypeItem::Apple, QT_TRANSLATE_NOOP(Item::TypeItem, "Яблоко") },
-    { Item::TypeItem::Cheese, QT_TRANSLATE_NOOP(Item::TypeItem, "Сыр") },
-};
-
-Item::Item() : Item(TypeItem::None, "")
+Item::Item() : Item(-1, "", "")
 {
 
 }
 
-Item::Item(const TypeItem typeItem, const QString &iconPath)
-    : _typeItem(typeItem), _iconPath(iconPath)
+Item::Item(const int typeItem, const QString &iconPath, const QString &name)
+    : _typeItem(typeItem), _iconPath(iconPath), _name(name)
 {
 
 }
 
-Item::Item(const TypeItem &&typeItem, const QString &&iconPath)
-    : _typeItem(std::move(typeItem)), _iconPath(std::move(iconPath))
+Item::Item(const int typeItem, const QString &&iconPath, const QString &&name)
+    : _typeItem(typeItem), _iconPath(std::move(iconPath)), _name(std::move(name))
 {
 
 }
 
 Item::Item(const Item &other)
-    : _typeItem(other._typeItem), _iconPath(other._iconPath)
+    : _typeItem(other._typeItem), _iconPath(other._iconPath), _name(other._name)
 {
 
 }
 
 Item::Item(Item &&other)
-    : _typeItem(std::move(other._typeItem)), _iconPath(std::move(other._iconPath))
+    : _typeItem(std::move(other._typeItem)), _iconPath(std::move(other._iconPath)),
+      _name(std::move(other._name))
 {
 
 }
 
-void Item::setType(const TypeItem typeItem)
-{
-    _typeItem = typeItem;
-}
-
-void Item::setType(const TypeItem &&typeItem)
-{
-    _typeItem = std::move(typeItem);
-}
-
-Item::TypeItem Item::type() const
+int Item::type() const
 {
     return _typeItem;
 }
 
-QString Item::typeName() const
+QString Item::name() const
 {
-    return _typeNames.value(_typeItem);
-}
-
-void Item::setIconPath(const QString &iconPath)
-{
-    _iconPath = iconPath;
-}
-
-void Item::setIconPath(const QString &&iconPath)
-{
-    _iconPath = std::move(iconPath);
+    return _name;
 }
 
 QString Item::iconPath() const
@@ -86,6 +56,7 @@ Item &Item::operator=(const Item &other)
 {
     _typeItem = other._typeItem;
     _iconPath = other._iconPath;
+    _name = other._name;
     return *this;
 }
 
@@ -93,5 +64,6 @@ Item &Item::operator=(const Item &&other)
 {
     _typeItem = std::move(other._typeItem);
     _iconPath = std::move(other._iconPath);
+    _name = std::move(other._name);
     return *this;
 }

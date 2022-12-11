@@ -1,6 +1,7 @@
 #include "playingfieldwindow.h"
 #include "playingfieldwidget.h"
 #include "menuwidget.h"
+#include "../database.h"
 
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -18,6 +19,7 @@ PlayingFieldWindow::PlayingFieldWindow(QWidget *parent)
     const auto menu = new MenuWidget(tr("Новая игра"), Qt::Horizontal);
     connect(menu, &MenuWidget::start, this, [this, playingFielsWidget, menu]() {
         centralWidget()->setEnabled(true);
+        Database::instance().resetItems();
         playingFielsWidget->reset();
         menu->hide();
     });

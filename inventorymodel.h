@@ -67,6 +67,10 @@ public:
     /// \param role Роль
     /// \return Успех операции
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+    /// Получить данные элемента в карте <роль - данные>
+    /// \param index Индекс элемента
+    /// \return Данные элемента
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
     /// Сбросить модель
     Q_SLOT void reset();
 
