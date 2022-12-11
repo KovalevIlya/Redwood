@@ -40,4 +40,10 @@ PlayingFieldWindow::PlayingFieldWindow(QWidget *parent)
 
     setMenuWidget(menu);
     setCentralWidget(mainWidget);
+
+    static const auto style = "PlayingFieldWindow { "
+                              "    background-image: url(:/resourses/resourses/Background.jpg);"
+                              "    background-position: bottom right;"
+                              "}";
+    setStyleSheet(style);
 }
