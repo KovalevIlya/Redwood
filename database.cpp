@@ -138,6 +138,7 @@ Database::Database()
         query.bindValue(":ru_name", "Яблоко");
         query.exec();
 
+        // TODO: Добавление Сыра в предметы, разкоментировать если нужно
 //        query.bindValue(":type", 1);
 //        query.bindValue(":path_icon", ":/resourses/resourses/cheese.png");
 //        query.bindValue(":ru_name", "Сыр");
