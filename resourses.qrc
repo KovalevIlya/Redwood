@@ -5,5 +5,6 @@
         <file>resourses/border.png</file>
         <file>resourses/cheese.png</file>
         <file>resourses/eat.wav</file>
+        <file>resourses/Background.jpg</file>
     </qresource>
 </RCC>

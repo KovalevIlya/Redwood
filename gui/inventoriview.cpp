@@ -29,13 +29,13 @@ InventoriView::InventoriView(QWidget *parent) : QTableView(parent)
     setDefaultDropAction(Qt::MoveAction);
 
     static const auto style = QString("background: url(:/resourses/resourses/inventory.png);"
-                                      "selection-background-color: rgba(0, 0, 255, 100%);"
                                       "gridline-color: rgba(0, 0, 0, 0%);"
                                       "border-top-width: %1px;"
                                       "border-right-width: %2px;"
                                       "border-bottom-width: %3px;"
                                       "border-left-width: %4px;"
-                                      "border-image: url(:/resourses/resourses/border.png) stretch;")
+                                      "border-image: url(:/resourses/resourses/border.png) stretch;"
+                                      "font: bold 14px;")
             .arg(borderTopWidth).arg(borderRightWidth).arg(borderBottomWidth).arg(borderLeftWidth);
     setStyleSheet(style);
 

@@ -20,10 +20,14 @@ constexpr int columnCount = 3;
 PlayingFieldWidget::PlayingFieldWidget(QWidget *parent)
     : QWidget(parent)
 {
+    const auto layRight = new QVBoxLayout();
+    layRight->addStretch();
+    layRight->addWidget(makeSpawner());
+
     const auto lay = new QHBoxLayout(this);
     lay->addWidget(makeInventory());
     lay->addSpacing(50);
-    lay->addWidget(makeSpawner());
+    lay->addLayout(layRight);
 }
 
 void PlayingFieldWidget::reset()
@@ -44,14 +48,24 @@ QWidget *PlayingFieldWidget::makeSpawner()
 {
     const auto itemList = Database::instance().itemList();
 
-    const auto items = new QListView();
+    const auto spawner = new QListView();
+
     const auto model = new SpawnerModel(itemList.count());
-    items->setModel(model);
-    items->setViewMode(QListView::IconMode);
-    items->setIconSize(QSize(Specification::sizeItem, Specification::sizeItem));
-    items->setSpacing(10);
-    items->setAcceptDrops(false);
-    items->setWrapping(false);
+    spawner->setModel(model);
+
+    spawner->setViewMode(QListView::IconMode);
+    spawner->setIconSize(QSize(Specification::sizeItem, Specification::sizeItem));
+    spawner->setSpacing(0);
+    spawner->setAcceptDrops(false);
+    spawner->setWrapping(false);
+
+    spawner->setFixedHeight(Specification::sizeItem + 24);
+    spawner->setFixedWidth(itemList.count() * Specification::sizeItem + 16);
+
+    static const auto style = "background-color: rgba(0, 0, 0, 0%);"
+                              "border-style: none;"
+                              "font: bold 14px;";
+    spawner->setStyleSheet(style);
 
     int idndex = 0;
     for (const auto &item : itemList) {
@@ -59,5 +73,5 @@ QWidget *PlayingFieldWidget::makeSpawner()
                        Roles::InventoryRoles::ItemRole);
     }
 
-    return items;
+    return spawner;
 }
