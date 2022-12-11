@@ -1,7 +1,8 @@
 #include "inventorymodel.h"
 #include "inventory.h"
 #include "item.h"
-#include "roles.h"
+#include "database.h"
+#include "global.h"
 
 #include <QIcon>
 #include <QMimeData>
@@ -11,6 +12,33 @@ InventoryModel::InventoryModel(Inventory *inventory, QObject *parent)
     : QAbstractItemModel(parent), _inventory(inventory)
 {
     _inventory->setParent(this);
+
+    connect(this, &InventoryModel::dataChanged,
+            this, [this](const QModelIndex &topLeft, const QModelIndex &bottomRight,
+                         const QVector<int> &roles){
+        if (!roles.contains(Roles::InventoryRoles::ItemsRole))
+            return;
+
+        int row = topLeft.row();
+        int column = topLeft.column();
+
+        const int endRow = bottomRight.row();
+        const int endColumn = bottomRight.column();
+
+        const int columnCount = this->columnCount();
+
+        while (row <= endRow) {
+            const auto items = data(index(row, column),
+                                    Roles::InventoryRoles::ItemsRole).value<Items>();
+            Database::instance().setItems(row * columnCount + column, items);
+
+            ++column;
+            if (column > endColumn) {
+                ++row;
+                column = topLeft.column();
+            }
+        }
+    });
 }
 
 Qt::ItemFlags InventoryModel::flags(const QModelIndex &index) const
@@ -42,20 +70,21 @@ QStringList InventoryModel::mimeTypes() const
 
 QMimeData *InventoryModel::mimeData(const QModelIndexList &indexes) const
 {
-    QMimeData *mimeData = new QMimeData();
     QByteArray encodedData;
-
     QDataStream stream(&encodedData, QIODevice::WriteOnly);
 
-    foreach (QModelIndex index, indexes) {
-        if (index.isValid()) {
-            Items items = data(index, Roles::InventoryRoles::ItemsRole).value<Items>();
-            stream << static_cast<int>(items.item.type())
-                   << items.item.iconPath()
-                   << QString::number(items.count);
-        }
-    }
+    if (indexes.count() != 1)
+        return nullptr;
 
+    const auto index = indexes[0];
+
+    if (!index.isValid())
+        return nullptr;
+
+    Items items = data(index, Roles::InventoryRoles::ItemsRole).value<Items>();
+    stream << items.item.type() << items.item.iconPath() << items.item.name() << items.count;
+
+    QMimeData *mimeData = new QMimeData();
     mimeData->setData("text/plane/items", encodedData);
     return mimeData;
 }
@@ -66,87 +95,56 @@ bool InventoryModel::dropMimeData(const QMimeData *data, Qt::DropAction action, 
     if (action == Qt::IgnoreAction)
         return true;
 
-    if (row == -1) {
-        if (parent.isValid())
-            row = parent.row();
-    }
-    if (column == -1) {
-        if (parent.isValid())
-            column = parent.column();
-    }
-
-    if (column < 0 || column >= columnCount() || row < 0 || row >= rowCount())
+    if (!parent.isValid())
         return false;
+
+    row = parent.row();
+    column = parent.column();
+
+    const auto editItems = [this, &row, &column](const Items &&newItems) {
+
+        const auto index = this->index(row, column);
+
+        const Items oldItems = this->data(index, Roles::InventoryRoles::ItemsRole).value<Items>();
+
+        if (newItems.item != oldItems.item) {
+            if (oldItems.item == Item() || oldItems.count == 0)
+                setData(index, QVariant::fromValue(newItems), Roles::InventoryRoles::ItemsRole);
+            else
+                return false;
+        } else {
+            setData(index, QVariant::fromValue(newItems), Roles::InventoryRoles::AddItemsRole);
+        }
+        return true;
+    };
 
     if (data->hasFormat("text/plane/items")) {
         QByteArray encodedData = data->data("text/plane/items");
         QDataStream stream(&encodedData, QIODevice::ReadOnly);
 
-        while (!stream.atEnd()) {
-            int typeItemInt;
+        if (!stream.atEnd()) {
+            int typeItem;
             QString iconPath;
-            QString countStr;
+            QString name;
+            int count;
 
-            stream >> typeItemInt >> iconPath >> countStr;
+            stream >> typeItem >> iconPath >> name >> count;
 
-            const auto index = this->index(row, column++);
-
-            const Items newItems(Item(static_cast<Item::TypeItem>(typeItemInt), iconPath),
-                        countStr.toUInt());
-            const Items oldItems = this->data(index, Roles::InventoryRoles::ItemsRole).value<Items>();
-
-            if (newItems.item != oldItems.item) {
-                if (oldItems.item == Item() || oldItems.count == 0)
-                    setData(index, QVariant::fromValue(newItems), Roles::InventoryRoles::ItemsRole);
-                else
-                    return false;
-            } else {
-                setData(index, QVariant::fromValue(newItems), Roles::InventoryRoles::AddItemsRole);
-            }
-
-            if (column == columnCount()) {
-                ++row;
-                column = 0;
-                if (row == rowCount())
-                    return true;
-            }
+            return editItems(Items(Item(typeItem, iconPath, name), count));
         }
-
-        return true;
     } else if (data->hasFormat("text/plane/item")) {
         QByteArray encodedData = data->data("text/plane/item");
         QDataStream stream(&encodedData, QIODevice::ReadOnly);
 
-        while (!stream.atEnd()) {
-            int typeItemInt;
+        if (!stream.atEnd()) {
+            int typeItem;
             QString iconPath;
+            QString name;
 
-            stream >> typeItemInt >> iconPath;
+            stream >> typeItem >> iconPath >> name;
 
-            const auto index = this->index(row, column++);
-
-            Items newItems(Item(static_cast<Item::TypeItem>(typeItemInt), iconPath), 1);
-
-            const Items oldItems = this->data(index, Roles::InventoryRoles::ItemsRole).value<Items>();
-
-            if (newItems.item != oldItems.item) {
-                if (oldItems.item == Item() || oldItems.count == 0)
-                    setData(index, QVariant::fromValue(newItems), Roles::InventoryRoles::ItemsRole);
-                else
-                    return false;
-            } else {
-                setData(index, QVariant::fromValue(newItems), Roles::InventoryRoles::AddItemsRole);
-            }
-
-            if (column == columnCount()) {
-                ++row;
-                column = 0;
-                if (row == rowCount())
-                    return true;
-            }
+            return editItems(Items(Item(typeItem, iconPath, name), 1));
         }
-
-        return true;
     }
 
     return false;
@@ -219,6 +217,7 @@ bool InventoryModel::setData(const QModelIndex &index, const QVariant &value, in
     case Roles::InventoryRoles::AddItemsRole: {
         const auto items = value.value<Items>();
         _inventory->addItem(row, column, items.item, items.count);
+        roles.append(Roles::InventoryRoles::ItemsRole);
         roles.append(Qt::DisplayRole);
         roles.append(Qt::DecorationRole);
         break;
@@ -232,6 +231,11 @@ bool InventoryModel::setData(const QModelIndex &index, const QVariant &value, in
     emit dataChanged(index, index, roles);
 
     return true;
+}
+
+QMap<int, QVariant> InventoryModel::itemData(const QModelIndex &index) const
+{
+    return {{ Roles::ItemsRole, data(index, Roles::ItemsRole) }};
 }
 
 void InventoryModel::reset()

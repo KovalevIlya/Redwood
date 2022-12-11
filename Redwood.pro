@@ -1,4 +1,4 @@
-QT       += core gui multimedia
+QT       += core gui multimedia sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    database.cpp \
     gui/inventoriview.cpp \
     gui/inventoryitemdelegate.cpp \
     gui/menuwidget.cpp \
@@ -29,6 +30,8 @@ SOURCES += \
     spawnermodel.cpp
 
 HEADERS += \
+    database.h \
+    global.h \
     gui/inventoriview.h \
     gui/inventoryitemdelegate.h \
     gui/mainmenu.h \
@@ -38,7 +41,6 @@ HEADERS += \
     inventory.h \
     inventorymodel.h \
     item.h \
-    roles.h \
     spawnermodel.h
 
 OTHER_FILES += \

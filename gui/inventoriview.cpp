@@ -1,13 +1,12 @@
 #include "inventoriview.h"
 #include "inventoryitemdelegate.h"
 #include "../inventory.h"
-#include "../roles.h"
+#include "../global.h"
 
 #include <QMouseEvent>
 #include <QHeaderView>
 #include <QSound>
 
-constexpr int sizeItem = 100;
 constexpr int borderTopWidth = 10;
 constexpr int borderRightWidth = 13;
 constexpr int borderBottomWidth = 10;
@@ -15,12 +14,12 @@ constexpr int borderLeftWidth = 14;
 
 InventoriView::InventoriView(QWidget *parent) : QTableView(parent)
 {
-    const int width = 3 * sizeItem + borderRightWidth + borderLeftWidth;
-    const int height = 3 * sizeItem + borderTopWidth + borderBottomWidth;
+    const int width = 3 * Specification::sizeItem + borderRightWidth + borderLeftWidth;
+    const int height = 3 * Specification::sizeItem + borderTopWidth + borderBottomWidth;
 
     setFixedSize(width, height);
 
-    setIconSize(QSize(sizeItem, sizeItem));
+    setIconSize(QSize(Specification::sizeItem, Specification::sizeItem));
     setCornerButtonEnabled(false);
     verticalHeader()->hide();
     horizontalHeader()->hide();
@@ -43,13 +42,13 @@ InventoriView::InventoriView(QWidget *parent) : QTableView(parent)
     setSelectionMode(QAbstractItemView::SingleSelection);
 
     verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-    verticalHeader()->setMinimumSectionSize(sizeItem);
-    verticalHeader()->setMaximumSectionSize(sizeItem);
-    verticalHeader()->setDefaultSectionSize(sizeItem);
+    verticalHeader()->setMinimumSectionSize(Specification::sizeItem);
+    verticalHeader()->setMaximumSectionSize(Specification::sizeItem);
+    verticalHeader()->setDefaultSectionSize(Specification::sizeItem);
     horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-    horizontalHeader()->setMinimumSectionSize(sizeItem);
-    horizontalHeader()->setMaximumSectionSize(sizeItem);
-    horizontalHeader()->setDefaultSectionSize(sizeItem);
+    horizontalHeader()->setMinimumSectionSize(Specification::sizeItem);
+    horizontalHeader()->setMaximumSectionSize(Specification::sizeItem);
+    horizontalHeader()->setDefaultSectionSize(Specification::sizeItem);
 
     setItemDelegate(new InventoryItemDelegate);
 }

@@ -1,5 +1,5 @@
 #include "spawnermodel.h"
-#include "roles.h"
+#include "global.h"
 
 #include <QIcon>
 #include <QMimeData>
@@ -35,19 +35,21 @@ QStringList SpawnerModel::mimeTypes() const
 
 QMimeData *SpawnerModel::mimeData(const QModelIndexList &indexes) const
 {
-    QMimeData *mimeData = new QMimeData();
     QByteArray encodedData;
-
     QDataStream stream(&encodedData, QIODevice::WriteOnly);
 
-    foreach (QModelIndex index, indexes) {
-        if (index.isValid()) {
-            Item item = data(index, Roles::InventoryRoles::ItemRole).value<Item>();
-            stream << static_cast<int>(item.type())
-                   << item.iconPath();
-        }
-    }
+    if (indexes.count() != 1)
+        return nullptr;
 
+    const auto index = indexes[0];
+
+    if (!index.isValid())
+        return nullptr;
+
+    Item item = data(index, Roles::InventoryRoles::ItemRole).value<Item>();
+    stream << item.type() << item.iconPath() << item.name();
+
+    QMimeData *mimeData = new QMimeData();
     mimeData->setData("text/plane/item", encodedData);
     return mimeData;
 }
@@ -65,7 +67,7 @@ QVariant SpawnerModel::data(const QModelIndex &index, int role) const
     QVariant data;
     switch (role) {
     case Qt::DisplayRole:
-        data = _items[index.row()].typeName();
+        data = _items[index.row()].name();
         break;
     case Qt::DecorationRole:
         data = _items[index.row()].icon();

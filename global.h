@@ -1,7 +1,14 @@
-#ifndef ROLES_H
-#define ROLES_H
+#ifndef GLOBAL_H
+#define GLOBAL_H
 
 #include <QObject>
+
+namespace Specification {
+Q_NAMESPACE
+
+constexpr int sizeItem = 100; ///< Графический размер элемента
+
+} // end namespace Specification
 
 namespace Roles
 {
@@ -13,7 +20,7 @@ enum InventoryRoles {
     AddItemsRole, ///< Роль для добавления предметов
     ItemRole ///< Роль для предмета
 };
-Q_ENUM_NS(InventoryRoles);
-}
+Q_ENUM_NS(InventoryRoles)
+} // end namespace Roles
 
-#endif // ROLES_H
+#endif // GLOBAL_H

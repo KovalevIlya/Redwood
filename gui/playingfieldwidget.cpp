@@ -5,7 +5,8 @@
 #include "../spawnermodel.h"
 #include "../inventory.h"
 #include "../item.h"
-#include "../roles.h"
+#include "../global.h"
+#include "../database.h"
 
 #include <QLayout>
 #include <QTableWidget>
@@ -13,10 +14,8 @@
 #include <QHeaderView>
 #include <QItemDelegate>
 
-constexpr int sizeItem = 100;
 constexpr int rowCount = 3;
 constexpr int columnCount = 3;
-constexpr int itemsCount = 2;
 
 PlayingFieldWidget::PlayingFieldWidget(QWidget *parent)
     : QWidget(parent)
@@ -43,21 +42,22 @@ QWidget *PlayingFieldWidget::makeInventory()
 
 QWidget *PlayingFieldWidget::makeSpawner()
 {
+    const auto itemList = Database::instance().itemList();
+
     const auto items = new QListView();
-    const auto model = new SpawnerModel(itemsCount);
+    const auto model = new SpawnerModel(itemList.count());
     items->setModel(model);
     items->setViewMode(QListView::IconMode);
-    items->setIconSize(QSize(sizeItem, sizeItem));
+    items->setIconSize(QSize(Specification::sizeItem, Specification::sizeItem));
     items->setSpacing(10);
     items->setAcceptDrops(false);
     items->setWrapping(false);
 
-    model->setData(model->index(0), QVariant::fromValue(Item(Item::TypeItem::Apple,
-                                                             ":/resourses/resourses/apple.png")),
-                   Roles::InventoryRoles::ItemRole);
-    model->setData(model->index(1), QVariant::fromValue(Item(Item::TypeItem::Cheese,
-                                                             ":/resourses/resourses/cheese.png")),
-                   Roles::InventoryRoles::ItemRole);
+    int idndex = 0;
+    for (const auto &item : itemList) {
+        model->setData(model->index(idndex++), QVariant::fromValue(item),
+                       Roles::InventoryRoles::ItemRole);
+    }
 
     return items;
 }
